@@ -8,6 +8,7 @@ use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
@@ -19,17 +20,17 @@ class User extends BaseModel implements
     CanResetPasswordContract,
     JWTSubject
 {
-    use Authenticatable, Authorizable, CanResetPassword, HasFactory, Notifiable;
+    use Authenticatable, Authorizable, CanResetPassword, HasFactory, Notifiable, MustVerifyEmail;
 
     /**
      * @var int Auto increments integer key
      */
-    public $primaryKey = 'user_id';
+    public $primaryKey = 'id';
 
     /**
      * @var array Relations to load implicitly by Restful controllers
      */
-    public static $localWith = ['primaryRole', 'roles'];
+    public static $localWith = ['role', 'roles'];
 
     /**
      * The attributes that are mass assignable.
@@ -40,7 +41,7 @@ class User extends BaseModel implements
         'name',
         'email',
         'password',
-        'primary_role',
+        'role_id',
     ];
 
     /**
@@ -97,9 +98,9 @@ class User extends BaseModel implements
      *
      * @return \Illuminate\Database\Eloquent\Relations\belongsTo
      */
-    public function primaryRole()
+    public function role()
     {
-        return $this->belongsTo(Role::class, 'primary_role');
+        return $this->belongsTo(Role::class);
     }
 
     /**
@@ -119,7 +120,7 @@ class User extends BaseModel implements
     {
         $allRoles = array_merge(
             [
-                $this->primaryRole->name,
+                $this->role->name,
             ],
             $this->roles->pluck('name')->toArray()
         );
@@ -160,7 +161,7 @@ class User extends BaseModel implements
             'user' => [
                 'id' => $this->getKey(),
                 'name' => $this->name,
-                'primaryRole' => $this->primaryRole->name,
+                'role' => $this->role->name,
             ],
         ];
     }

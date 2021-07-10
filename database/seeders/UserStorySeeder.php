@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class UserStorySeeder extends BaseSeeder
 {
@@ -23,14 +24,16 @@ class UserStorySeeder extends BaseSeeder
         \App\Models\User::factory()->create([
             'name'         => 'Admin',
             'email'        => static::ADMIN_CREDENTIALS['email'],
-            'primary_role' => $roles->where('name', 'admin')->first()->role_id,
+            'role_id' => $roles->where('name', 'admin')->first()->id,
+            'password'         => Hash::make('password'),
         ]);
 
         // Create regular user
         \App\Models\User::factory()->create([
             'name'         => 'Bob',
             'email'        => 'bob@bob.com',
-            'primary_role' => $roles->where('name', 'regular')->first()->role_id,
+            'role_id' => $roles->where('name', 'end-user')->first()->id,
+            'password'         => Hash::make('password'),
         ]);
 
         // Get some random roles to assign to users
@@ -40,7 +43,7 @@ class UserStorySeeder extends BaseSeeder
         // Assign fake roles to users
         for ($i = 0; $i < 5; ++$i) {
             $user = \App\Models\User::factory()->create([
-                'primary_role' => $roles->random()->role_id,
+                'role_id' => $roles->random()->id,
             ]);
 
             for ($j = 0; $j < count($fakeRolesToAssign); ++$j) {

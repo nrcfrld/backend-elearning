@@ -12,12 +12,12 @@ class Role extends BaseModel
     /**
      * @var int Auto increments integer key
      */
-    public $primaryKey = 'role_id';
+    public $primaryKey = 'id';
 
     /**
      * @var string UUID key
      */
-    public $uuidKey = 'role_uuid';
+    public $uuidKey = 'id';
 
     /**
      * The attributes that are mass assignable.

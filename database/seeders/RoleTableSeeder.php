@@ -14,9 +14,15 @@ class RoleTableSeeder extends BaseSeeder
         ]);
 
         Role::firstOrCreate([
-            'name' => 'regular',
+            'name' => 'mentor',
+            'description' => 'Mentor Users',
+        ]);
+
+        Role::firstOrCreate([
+            'name' => 'end-user',
             'description' => 'Regular Users',
         ]);
+
     }
 
     public function runFake()
