@@ -4,15 +4,16 @@ namespace App\Models;
 
 use Hash;
 use Illuminate\Auth\Authenticatable;
-use Illuminate\Auth\Passwords\CanResetPassword;
-use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\Access\Authorizable;
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Foundation\Auth\Access\Authorizable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
 class User extends BaseModel implements
     AuthenticatableContract,
@@ -42,6 +43,10 @@ class User extends BaseModel implements
         'email',
         'password',
         'role_id',
+        'avatar',
+        'descriptions',
+        'institute',
+        'profession'
     ];
 
     /**
@@ -63,6 +68,15 @@ class User extends BaseModel implements
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function getAvatarAttribute($avatar)
+    {
+        if($avatar){
+            return Storage::url($this->avatar);
+        }
+
+        return "https://ui-avatars.com/api/?name={$this->name}&color=7F9CF5&background=EBF4FF";
+    }
 
     /**
      * Model's boot function

@@ -4,9 +4,9 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class {{ class }} extends Migration
+class CreateCategoriesTable extends Migration
 {
-    const TABLE_NAME = '{{ table }}';
+    const TABLE_NAME = 'categories';
     /**
      * Run the migrations.
      *
@@ -16,7 +16,10 @@ class {{ class }} extends Migration
     {
         Schema::create(static::TABLE_NAME, function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->uuid('parent_id')->nullable();
             $table->string('name');
+            $table->string('slug');
+            $table->text('descriptions');
 
             $table->uuid('created_by')->nullable();
             $table->uuid('updated_by')->nullable();
@@ -34,7 +37,6 @@ class {{ class }} extends Migration
                 ->references('id')
                 ->on('users')
                 ->onUpdate('cascade');
-
             $table->timestamps();
             $table->softDeletes();
         });
@@ -47,6 +49,6 @@ class {{ class }} extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('{{ table }}');
+        Schema::dropIfExists('categories');
     }
 }

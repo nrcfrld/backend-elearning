@@ -22,7 +22,6 @@ class RoleTableSeeder extends BaseSeeder
             'name' => 'end-user',
             'description' => 'Regular Users',
         ]);
-
     }
 
     public function runFake()

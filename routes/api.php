@@ -43,6 +43,14 @@ $api->version('v1', ['middleware' => ['api']], function (Router $api) {
     });
 
     /*
+     * Categories
+     */
+    $api->group(['prefix' => 'categories'], function (Router $api) {
+        $api->get('/', 'App\Http\Controllers\CategoryController@getAll');
+        $api->get('/{uuid}', 'App\Http\Controllers\CategoryController@get');
+    });
+
+    /*
      * Authenticated routes
      */
     $api->group(['middleware' => ['api.auth']], function (Router $api) {
@@ -58,13 +66,13 @@ $api->version('v1', ['middleware' => ['api']], function (Router $api) {
             $api->get('/me', 'App\Http\Controllers\Auth\AuthController@getUser');
         });
 
+        $api->get('/users/{uuid}', 'App\Http\Controllers\UserController@get');
         $api->group(['middleware' => 'check_role:admin'], function(Router $api){
             /*
             * Users
             */
             $api->group(['prefix' => 'users'], function (Router $api) {
                 $api->get('/', 'App\Http\Controllers\UserController@getAll');
-                $api->get('/{uuid}', 'App\Http\Controllers\UserController@get');
                 $api->post('/', 'App\Http\Controllers\UserController@post');
                 $api->put('/{uuid}', 'App\Http\Controllers\UserController@put');
                 $api->patch('/{uuid}', 'App\Http\Controllers\UserController@patch');
@@ -77,6 +85,16 @@ $api->version('v1', ['middleware' => ['api']], function (Router $api) {
             $api->group(['prefix' => 'roles'], function (Router $api) {
                 $api->get('/', 'App\Http\Controllers\RoleController@getAll');
             });
+
+            /*
+            * Categories
+            */
+            $api->group(['prefix' => 'categories'], function (Router $api) {
+                $api->post('/', 'App\Http\Controllers\CategoryController@post');
+                $api->patch('/{uuid}', 'App\Http\Controllers\CategoryController@patch');
+                $api->delete('/{uuid}', 'App\Http\Controllers\CategoryController@delete');
+            });
         });
     });
+
 });
