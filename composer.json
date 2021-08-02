@@ -18,12 +18,14 @@
     ],
     "require": {
         "php": "^7.3|^8.0",
+        "bensampo/laravel-enum": "^3.4",
         "cviebrock/eloquent-sluggable": "^8.0",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.0",
         "laravel/tinker": "^2.5",
+        "midtrans/midtrans-php": "^2.4",
         "specialtactics/l5-api": "^3.0"
     },
     "require-dev": {

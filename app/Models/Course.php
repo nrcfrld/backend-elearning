@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Enums\CourseLevel;
+use BenSampo\Enum\Rules\EnumValue;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Category extends BaseModel
+class Course extends BaseModel
 {
     use HasFactory, Sluggable, SoftDeletes;
 
@@ -19,7 +22,7 @@ class Category extends BaseModel
     /**
      * @var null|array What relations should one model of this entity be returned with, from a relevant controller
      */
-    public static $itemWith = ['parent'];
+    public static $itemWith = ['category', 'mentors'];
 
     /**
      * @var null|array What relations should a collection of models of this entity be returned with, from a relevant controller
@@ -35,12 +38,31 @@ class Category extends BaseModel
     /**
      * @var array The attributes that are mass assignable.
      */
-    protected $fillable = ['name', 'descriptions', 'slug', 'parent_id'];
+    protected $fillable = ['name', 'category_id', 'type', 'level', 'descriptions', 'price', 'max_participant', 'trailer_url', 'thumbnail', 'tags'];
 
     /**
      * @var array The attributes that should be hidden for arrays and API output
      */
     protected $hidden = [];
+
+    public function getThumbnailAttribute($thumbnail)
+    {
+        if($thumbnail){
+            if(Storage::disk('public')->exists($thumbnail)){
+                return Storage::disk('public')->url($thumbnail);
+            }
+        }
+
+        return asset('/img/example-image.jpg');
+    }
+
+    public function getTagsAttribute($tags)
+    {
+        if($tags){
+            return explode(',', $tags);
+        }
+        return [];
+    }
 
     /**
      * Return the validation rules for this model
@@ -50,8 +72,11 @@ class Category extends BaseModel
     public function getValidationRules()
     {
         return [
-            'name'  => 'required|min:3',
-            'descriptions' => 'required'
+            'name' => 'required',
+            'price' => 'required',
+            'type' => 'required',
+            'level' => ['required', new EnumValue(CourseLevel::class)],
+            'category_id' => 'required|exists:categories,id',
         ];
     }
 
@@ -64,7 +89,11 @@ class Category extends BaseModel
         ];
     }
 
-    public function parent(){
-        return $this->belongsTo(Category::class, 'parent_id', 'id');
+    public function category(){
+        return $this->belongsTo(Category::class);
+    }
+
+    public function mentors(){
+        return $this->belongsToMany(User::class, 'course_mentor', 'course_id', 'user_id');
     }
 }

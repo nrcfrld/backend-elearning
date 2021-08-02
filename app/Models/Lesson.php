@@ -2,14 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Model;
 
-class Category extends BaseModel
+class Lesson extends BaseModel
 {
-    use HasFactory, Sluggable, SoftDeletes;
+    use HasFactory, Sluggable;
 
     /**
      * @var string UUID key of the resource
@@ -19,7 +18,7 @@ class Category extends BaseModel
     /**
      * @var null|array What relations should one model of this entity be returned with, from a relevant controller
      */
-    public static $itemWith = ['parent'];
+    public static $itemWith = [];
 
     /**
      * @var null|array What relations should a collection of models of this entity be returned with, from a relevant controller
@@ -35,7 +34,7 @@ class Category extends BaseModel
     /**
      * @var array The attributes that are mass assignable.
      */
-    protected $fillable = ['name', 'descriptions', 'slug', 'parent_id'];
+    protected $fillable = ['name', 'descriptions', 'video_url', 'free_access', 'chapter_id'];
 
     /**
      * @var array The attributes that should be hidden for arrays and API output
@@ -49,10 +48,7 @@ class Category extends BaseModel
      */
     public function getValidationRules()
     {
-        return [
-            'name'  => 'required|min:3',
-            'descriptions' => 'required'
-        ];
+        return [];
     }
 
     public function sluggable(): array
@@ -64,7 +60,8 @@ class Category extends BaseModel
         ];
     }
 
-    public function parent(){
-        return $this->belongsTo(Category::class, 'parent_id', 'id');
+    public function chapters()
+    {
+        return $this->belongsTo(Chapter::class);
     }
 }

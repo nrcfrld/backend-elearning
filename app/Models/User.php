@@ -57,7 +57,6 @@ class User extends BaseModel implements
     protected $hidden = [
         'password',
         'remember_token',
-        'email_verified_at',
     ];
 
     /**
@@ -72,7 +71,9 @@ class User extends BaseModel implements
     public function getAvatarAttribute($avatar)
     {
         if($avatar){
-            return Storage::url($this->avatar);
+            if(Storage::disk('public')->exists($avatar)){
+                return Storage::disk('public')->url($avatar);
+            }
         }
 
         return "https://ui-avatars.com/api/?name={$this->name}&color=7F9CF5&background=EBF4FF";
@@ -101,9 +102,10 @@ class User extends BaseModel implements
     public function getValidationRules()
     {
         return [
-            'email' => 'email|max:255|unique:users',
             'name'  => 'required|min:3',
+            'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:6',
+            'role_id' => 'required|exists:roles,id'
         ];
     }
 

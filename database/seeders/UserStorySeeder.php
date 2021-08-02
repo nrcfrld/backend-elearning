@@ -22,7 +22,8 @@ class UserStorySeeder extends BaseSeeder
 
         // Create an admin user
         \App\Models\User::factory()->create([
-            'name'         => 'Admin',
+            'name'         => 'Administrator',
+            'descriptions'         => 'Administrator',
             'email'        => static::ADMIN_CREDENTIALS['email'],
             'role_id' => $roles->where('name', 'admin')->first()->id,
             'password'         => Hash::make('password'),
@@ -30,10 +31,23 @@ class UserStorySeeder extends BaseSeeder
 
         // Create regular user
         \App\Models\User::factory()->create([
-            'name'         => 'Bob',
-            'email'        => 'bob@bob.com',
+            'name'         => 'Mentor User',
+            'email'        => 'mentor@mentor.com',
+            'descriptions'         => 'Mentor',
+            'institute'         => 'Tokopaedi',
+            'profession'         => 'Sofware Engineer',
+            'role_id' => $roles->where('name', 'mentor')->first()->id,
+            'password'         => Hash::make('password'),
+        ]);
+
+        // Create regular user
+        \App\Models\User::factory()->create([
+            'name'         => 'Enrico Feraldo',
+            'email'        => 'icoferaldo@gmail.com',
             'role_id' => $roles->where('name', 'end-user')->first()->id,
             'password'         => Hash::make('password'),
+            'institute' => 'LP3I Jakarta',
+            'profession' => 'Mahasiswa'
         ]);
 
         // Get some random roles to assign to users
@@ -41,9 +55,11 @@ class UserStorySeeder extends BaseSeeder
         $fakeRolesToAssign = RoleTableSeeder::getRandomRoles($fakeRolesToAssignCount);
 
         // Assign fake roles to users
-        for ($i = 0; $i < 5; ++$i) {
+        for ($i = 0; $i < 3; ++$i) {
             $user = \App\Models\User::factory()->create([
                 'role_id' => $roles->random()->id,
+                'institute' => 'Kebun Pisang',
+                'profession' => 'Joki Skripsi'
             ]);
 
             for ($j = 0; $j < count($fakeRolesToAssign); ++$j) {

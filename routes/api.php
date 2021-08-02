@@ -18,9 +18,6 @@ use Illuminate\Http\Request;
  * Welcome route - link to any public API documentation here
  */
 
-Route::get('/', function () {
-    echo "Nothing";
-});
 
 
 Route::get('email/verify/{id}', 'App\Http\Controllers\VerificationController@verify')->name('verification.verify'); // Make sure to keep this as your route name
@@ -31,6 +28,12 @@ Route::get('email/resend', 'App\Htpp\Controllers\VerificationController@resend')
 $api = app('Dingo\Api\Routing\Router');
 
 $api->version('v1', ['middleware' => ['api']], function (Router $api) {
+
+    $api->get('/', 'App\Http\Controllers\Web\HomeController@index');
+
+    $api->post('/webhook', 'App\Http\Controllers\WebhookController@midtransHandler');
+
+
     /*
      * Authentication
      */
@@ -43,11 +46,36 @@ $api->version('v1', ['middleware' => ['api']], function (Router $api) {
     });
 
     /*
-     * Categories
-     */
+    * Categories
+    */
     $api->group(['prefix' => 'categories'], function (Router $api) {
         $api->get('/', 'App\Http\Controllers\CategoryController@getAll');
         $api->get('/{uuid}', 'App\Http\Controllers\CategoryController@get');
+    });
+
+    /*
+    * Courses
+    */
+    $api->group(['prefix' => 'courses'], function (Router $api) {
+        $api->get('/', 'App\Http\Controllers\CourseController@getAll');
+        $api->get('/{uuid}', 'App\Http\Controllers\CourseController@get');
+    });
+
+
+    /*
+    * Chapters
+    */
+    $api->group(['prefix' => 'chapters'], function (Router $api) {
+        $api->get('/', 'App\Http\Controllers\ChapterController@getAll');
+        $api->get('/{uuid}', 'App\Http\Controllers\ChapterController@get');
+    });
+
+    /*
+    * Lessons
+    */
+    $api->group(['prefix' => 'lessons'], function (Router $api){
+        $api->get('/', 'App\Http\Controllers\LessonController@getAll');
+        $api->get('/{uuid}', 'App\Http\Controllers\LessonController@get');
     });
 
     /*
@@ -66,7 +94,14 @@ $api->version('v1', ['middleware' => ['api']], function (Router $api) {
             $api->get('/me', 'App\Http\Controllers\Auth\AuthController@getUser');
         });
 
+        // * Users
+        $api->put('/users/update-avatar/{user}', 'App\Http\Controllers\UserController@updateAvatar');
+        $api->patch('/users/update-avatar/{user}', 'App\Http\Controllers\UserController@updateAvatar');
         $api->get('/users/{uuid}', 'App\Http\Controllers\UserController@get');
+
+        // * Orders
+        $api->post('/orders/enroll', 'App\Http\Controllers\OrderController@create');
+
         $api->group(['middleware' => 'check_role:admin'], function(Router $api){
             /*
             * Users
@@ -93,6 +128,56 @@ $api->version('v1', ['middleware' => ['api']], function (Router $api) {
                 $api->post('/', 'App\Http\Controllers\CategoryController@post');
                 $api->patch('/{uuid}', 'App\Http\Controllers\CategoryController@patch');
                 $api->delete('/{uuid}', 'App\Http\Controllers\CategoryController@delete');
+            });
+
+            /*
+            * Courses
+            */
+            $api->group(['prefix' => 'courses'], function (Router $api) {
+                $api->post('/', 'App\Http\Controllers\CourseController@post');
+                $api->post('/upload-thumbnail/{uuid}', 'App\Http\Controllers\CourseController@uploadThumbnail');
+                $api->patch('/{uuid}', 'App\Http\Controllers\CourseController@patch');
+                $api->delete('/{uuid}', 'App\Http\Controllers\CourseController@delete');
+            });
+
+            /*
+            * Chapters
+            */
+            $api->group(['prefix' => 'chapters'], function (Router $api) {
+                $api->post('/', 'App\Http\Controllers\ChapterController@post');
+                $api->patch('/{uuid}', 'App\Http\Controllers\ChapterController@patch');
+                $api->delete('/{uuid}', 'App\Http\Controllers\ChapterController@delete');
+            });
+
+            /*
+            * Lessons
+            */
+            $api->group(['prefix' => 'lessons'], function (Router $api) {
+                $api->post('/', 'App\Http\Controllers\LessonController@post');
+                $api->patch('/{uuid}', 'App\Http\Controllers\LessonController@patch');
+                $api->delete('/{uuid}', 'App\Http\Controllers\LessonController@delete');
+            });
+
+            /*
+            * PaymentLogs
+            */
+            $api->group(['prefix' => 'payment-logs'], function (Router $api) {
+                $api->get('/', 'App\Http\Controllers\PaymentLogController@getAll');
+                $api->get('/{uuid}', 'App\Http\Controllers\PaymentLogController@get');
+                $api->post('/', 'App\Http\Controllers\PaymentLogController@post');
+                $api->patch('/{uuid}', 'App\Http\Controllers\PaymentLogController@patch');
+                $api->delete('/{uuid}', 'App\Http\Controllers\PaymentLogController@delete');
+            });
+
+            /*
+            * Orders
+            */
+            $api->group(['prefix' => 'orders'], function (Router $api) {
+                $api->get('/', 'App\Http\Controllers\OrderController@getAll');
+                $api->get('/{uuid}', 'App\Http\Controllers\OrderController@get');
+                $api->post('/', 'App\Http\Controllers\OrderController@post');
+                $api->patch('/{uuid}', 'App\Http\Controllers\OrderController@patch');
+                $api->delete('/{uuid}', 'App\Http\Controllers\OrderController@delete');
             });
         });
     });

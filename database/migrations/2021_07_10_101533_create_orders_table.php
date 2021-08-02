@@ -4,9 +4,9 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCategoriesTable extends Migration
+class CreateOrdersTable extends Migration
 {
-    const TABLE_NAME = 'categories';
+    const TABLE_NAME = 'orders';
     /**
      * Run the migrations.
      *
@@ -16,11 +16,12 @@ class CreateCategoriesTable extends Migration
     {
         Schema::create(static::TABLE_NAME, function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('parent_id')->nullable();
-            $table->uuid('image')->nullable();
-            $table->string('name');
-            $table->string('slug');
-            $table->text('descriptions');
+            $table->uuid('course_id');
+            $table->uuid('user_id');
+            $table->decimal('amount');
+            $table->string('status')->default('pending');
+            $table->json('metadata')->nullable();
+            $table->string('snap_id')->nullable();
 
             $table->uuid('created_by')->nullable();
             $table->uuid('updated_by')->nullable();
@@ -38,6 +39,7 @@ class CreateCategoriesTable extends Migration
                 ->references('id')
                 ->on('users')
                 ->onUpdate('cascade');
+
             $table->timestamps();
             $table->softDeletes();
         });
@@ -50,6 +52,6 @@ class CreateCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('orders');
     }
 }
