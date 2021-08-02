@@ -33,7 +33,7 @@ class Order extends BaseModel
     /**
      * @var array The attributes that are mass assignable.
      */
-    protected $fillable = ['user_id', 'course_id', 'metadata', 'snap_id', 'status', 'note'];
+    protected $fillable = ['user_id', 'course_id', 'metadata', 'snap_id', 'status', 'note', 'amount'];
 
     /**
      * @var array The attributes that should be hidden for arrays and API output

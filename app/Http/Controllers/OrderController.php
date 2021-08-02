@@ -25,7 +25,8 @@ class OrderController extends Controller
 
         $order = Order::create([
             'user_id' => $user->id,
-            'course_id' => $course->id
+            'course_id' => $course->id,
+            'amount' => $course->price
         ]);
 
         $transactionDetails = [
