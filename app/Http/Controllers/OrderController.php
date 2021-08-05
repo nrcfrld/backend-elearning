@@ -30,7 +30,7 @@ class OrderController extends Controller
             'amount' => $course->price
         ]);
 
-        if($course->price === 0){
+        if($course->price < 1){
             return UserCourse::create([
                 'user_id' => $user->id,
                 'course_id' => $course->id,
