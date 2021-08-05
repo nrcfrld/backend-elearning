@@ -36,50 +36,50 @@ class OrderController extends Controller
                 'course_id' => $course->id,
                 'status' => 'ACTIVE'
             ]);
+        }else{
+            $transactionDetails = [
+                'order_id' => $order->id,
+                'gross_amount' => $course->price
+            ];
+
+
+            $itemDetails = [
+                [
+                    'id' => $course->id,
+                    'price' => $course->price,
+                    'quantity' => 1,
+                    'name' => $course->name,
+                    'brand' => env('APP_NAME'),
+                    'category' => $course->category->name
+                ]
+            ];
+
+            $customerDetails = [
+                'first_name' => $user->name,
+                'email' => $user->email
+            ];
+
+            $midtransParams = [
+                'transaction_details' => $transactionDetails,
+                'item_details' => $itemDetails,
+                'customer_details' => $customerDetails
+            ];
+
+            $order->snap_id = $this->getMidtransSnapToken($midtransParams);
+
+            $order->metadata = [
+                'course_id' => $course->id,
+                'course_price' => $course->price,
+                'course_name' => $course->name,
+                'course_thumbnail' => $course->thumbnail,
+                'course_level' => $course->level,
+                'course_type' => $course->type,
+            ];
+
+            $order->save();
+
+            return $this->response->item($order, new BaseTransformer);
         }
-
-        $transactionDetails = [
-            'order_id' => $order->id,
-            'gross_amount' => $course->price
-        ];
-
-
-        $itemDetails = [
-            [
-                'id' => $course->id,
-                'price' => $course->price,
-                'quantity' => 1,
-                'name' => $course->name,
-                'brand' => env('APP_NAME'),
-                'category' => $course->category->name
-            ]
-        ];
-
-        $customerDetails = [
-            'first_name' => $user->name,
-            'email' => $user->email
-        ];
-
-        $midtransParams = [
-            'transaction_details' => $transactionDetails,
-            'item_details' => $itemDetails,
-            'customer_details' => $customerDetails
-        ];
-
-        $order->snap_id = $this->getMidtransSnapToken($midtransParams);
-
-        $order->metadata = [
-            'course_id' => $course->id,
-            'course_price' => $course->price,
-            'course_name' => $course->name,
-            'course_thumbnail' => $course->thumbnail,
-            'course_level' => $course->level,
-            'course_type' => $course->type,
-        ];
-
-        $order->save();
-
-        return $this->response->item($order, new BaseTransformer);
     }
 
 
