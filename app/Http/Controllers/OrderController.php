@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Course;
-use App\Transformers\BaseTransformer;
+use App\Models\UserCourse;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Transformers\BaseTransformer;
 
 class OrderController extends Controller
 {
@@ -28,6 +29,14 @@ class OrderController extends Controller
             'course_id' => $course->id,
             'amount' => $course->price
         ]);
+
+        if($course->price === 0){
+            return UserCourse::create([
+                'user_id' => $user->id,
+                'course_id' => $course->id,
+                'status' => 'ACTIVE'
+            ]);
+        }
 
         $transactionDetails = [
             'order_id' => $order->id,
