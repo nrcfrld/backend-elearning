@@ -3,10 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\CourseMentorController;
 use App\Services\RestfulService;
 
@@ -27,24 +24,6 @@ class CourseController extends Controller
         ]);
 
         return $this->response->noContent()->setStatusCode(204);
-    }
-
-    private function storeImage($image)
-    {
-        $randomString = Str::random(40);
-        Storage::put("public/images/$randomString.jpg", $image, 'public');
-        return "images/$randomString.jpg";
-    }
-
-
-    private function decodeBase64toImage($base64_string)
-    {
-        if (strpos($base64_string, 'base64') !== false) {
-            $data = explode(',', $base64_string);
-            return base64_decode($data[1]);
-        } else {
-            return $base64_string;
-        }
     }
 
     public function post(Request $request)

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Course;
+use App\Models\User;
 use App\Models\UserCourse;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -13,6 +14,21 @@ use App\Transformers\BaseTransformer;
 class OrderController extends Controller
 {
     public static $model = Order::class;
+
+    public function queryIndex(&$query)
+    {
+        $user = User::with('role')->find(Auth::user()->id);
+
+        if($user->role->name === 'mentor' ){
+            $query->whereHas('course', function($q) use($user) {
+                $q->where('created_by', $user->id);
+            });
+        }
+
+        if($user->role->name === 'end-user' ){
+            $query->where('created_by', $user->id);
+        }
+    }
 
     public function create(Request $request)
     {

@@ -29,6 +29,7 @@ class CreateCoursesTable extends Migration
             $table->string('tags')->nullable();
             $table->integer('max_participant')->nullable();
             $table->string('trailer_url')->nullable();
+            $table->integer('minutes');
 
 
             $table->uuid('created_by')->nullable();

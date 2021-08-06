@@ -17,7 +17,7 @@ class PaymentLog extends BaseModel
     /**
      * @var null|array What relations should one model of this entity be returned with, from a relevant controller
      */
-    public static $itemWith = [];
+    public static $itemWith = ['order'];
 
     /**
      * @var null|array What relations should a collection of models of this entity be returned with, from a relevant controller
@@ -48,5 +48,10 @@ class PaymentLog extends BaseModel
     public function getValidationRules()
     {
         return [];
+    }
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
     }
 }

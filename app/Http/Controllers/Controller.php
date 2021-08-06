@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Cache;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Str;
 use Specialtactics\L5Api\Http\Controllers\RestfulController as BaseController;
 
 class Controller extends BaseController
@@ -88,5 +90,23 @@ class Controller extends BaseController
     public function queryIndex(&$query)
     {
         return $query;
+    }
+
+    protected function storeImage($image)
+    {
+        $randomString = Str::random(40);
+        Storage::put("public/images/$randomString.jpg", $image, 'public');
+        return "images/$randomString.jpg";
+    }
+
+
+    protected function decodeBase64toImage($base64_string)
+    {
+        if (strpos($base64_string, 'base64') !== false) {
+            $data = explode(',', $base64_string);
+            return base64_decode($data[1]);
+        } else {
+            return $base64_string;
+        }
     }
 }

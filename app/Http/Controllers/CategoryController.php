@@ -19,4 +19,33 @@ class CategoryController extends Controller
             $query->whereNotNull('parent_id');
         }
     }
+
+    public function post(Request $request)
+    {
+        $this->authorizeUserAction('create');
+
+        $model = new static::$model;
+        $data = $request->input();
+
+        if($request->has('image') && $request->image){
+            if($request->image){
+                $data['image'] = $this->storeImage($this->decodeBase64toImage($request->image));
+            }
+        }
+
+        $this->restfulService->validateResource($model, $data);
+
+        $resource = $this->restfulService->persistResource(new $model($data));
+
+        // Retrieve full model
+        $resource = $model::with($model::getItemWith())->where($model->getKeyName(), '=', $resource->getKey())->first();
+
+        if ($this->shouldTransform()) {
+            $response = $this->response->item($resource, $this->getTransformer())->setStatusCode(201);
+        } else {
+            $response = $resource;
+        }
+
+        return $response;
+    }
 }

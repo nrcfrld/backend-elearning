@@ -28,6 +28,12 @@ class CategoriesSeeder extends BaseSeeder
             'descriptions' => 'UI Design',
             'parent_id' => Category::where('name', 'Design')->first()->id,
         ]);
+
+        Category::firstOrCreate([
+            'name' => 'Web Development',
+            'descriptions' => 'Web Development',
+            'parent_id' => Category::where('name', 'Software Development')->first()->id,
+        ]);
     }
 
     /**

@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
-class LessonsSeeder extends Seeder
+class LessonsSeeder extends BaseSeeder
 {
    /**
      * Run fake seeds - for non production environments

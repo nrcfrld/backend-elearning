@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
-class PaymentLogsSeeder extends Seeder
+class PaymentLogsSeeder extends BaseSeeder
 {
    /**
      * Run fake seeds - for non production environments

@@ -3,9 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Cviebrock\EloquentSluggable\Sluggable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Category extends BaseModel
 {
@@ -35,7 +36,7 @@ class Category extends BaseModel
     /**
      * @var array The attributes that are mass assignable.
      */
-    protected $fillable = ['name', 'descriptions', 'slug', 'parent_id'];
+    protected $fillable = ['name', 'descriptions', 'slug', 'parent_id', 'image'];
 
     /**
      * @var array The attributes that should be hidden for arrays and API output
@@ -51,7 +52,7 @@ class Category extends BaseModel
     {
         return [
             'name'  => 'required|min:3',
-            'descriptions' => 'required'
+            'descriptions' => 'required',
         ];
     }
 
@@ -66,5 +67,16 @@ class Category extends BaseModel
 
     public function parent(){
         return $this->belongsTo(Category::class, 'parent_id', 'id');
+    }
+
+    public function getImageAttribute($image)
+    {
+        if($image){
+            if(Storage::disk('public')->exists($image)){
+                return Storage::disk('public')->url($image);
+            }
+        }
+
+        return "https://ui-avatars.com/api/?name={$this->name}&color=7F9CF5&background=EBF4FF";
     }
 }
