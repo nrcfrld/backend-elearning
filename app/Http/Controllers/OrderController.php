@@ -32,10 +32,6 @@ class OrderController extends Controller
 
     public function create(Course $course, Request $request)
     {
-        $request->validate([
-            'course_id' => 'required'
-        ]);
-
         $user = Auth::user();
 
         $order = Order::create([
