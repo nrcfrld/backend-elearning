@@ -43,6 +43,8 @@ class Category extends BaseModel
      */
     protected $hidden = [];
 
+    protected $appends = ['courses_total'];
+
     /**
      * Return the validation rules for this model
      *
@@ -69,6 +71,10 @@ class Category extends BaseModel
         return $this->belongsTo(Category::class, 'parent_id', 'id');
     }
 
+    public function courses(){
+        return $this->hasMany(Course::class);
+    }
+
     public function getImageAttribute($image)
     {
         if($image){
@@ -78,5 +84,10 @@ class Category extends BaseModel
         }
 
         return "https://ui-avatars.com/api/?name={$this->name}&color=7F9CF5&background=EBF4FF";
+    }
+
+    public function getCoursesTotalAttribute()
+    {
+        return $this->courses()->count();
     }
 }
