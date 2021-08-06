@@ -22,7 +22,7 @@ class CreateLessonsTable extends Migration
             $table->string('video_url');
             $table->boolean('free_access')->default(false);
             $table->uuid('chapter_id');
-            $table->integer('minutes');
+            $table->integer('minutes')->default(0);
 
             $table->uuid('created_by')->nullable();
             $table->uuid('updated_by')->nullable();

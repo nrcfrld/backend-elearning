@@ -34,7 +34,7 @@ class Lesson extends BaseModel
     /**
      * @var array The attributes that are mass assignable.
      */
-    protected $fillable = ['name', 'descriptions', 'video_url', 'free_access', 'chapter_id'];
+    protected $fillable = ['name', 'descriptions', 'video_url', 'free_access', 'chapter_id', 'minute'];
 
     /**
      * @var array The attributes that should be hidden for arrays and API output
