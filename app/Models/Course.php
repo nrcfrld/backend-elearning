@@ -38,7 +38,7 @@ class Course extends BaseModel
     /**
      * @var array The attributes that are mass assignable.
      */
-    protected $fillable = ['name', 'category_id', 'type', 'level', 'descriptions', 'price', 'max_participant', 'trailer_url', 'thumbnail', 'tags'];
+    protected $fillable = ['name', 'category_id', 'type', 'level', 'descriptions', 'price', 'max_participant', 'trailer_url', 'thumbnail', 'tags', 'minute'];
 
     /**
      * @var array The attributes that should be hidden for arrays and API output
