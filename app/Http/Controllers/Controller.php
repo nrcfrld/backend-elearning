@@ -92,10 +92,10 @@ class Controller extends BaseController
         return $query;
     }
 
-    protected function storeImage($image)
+    protected function storeImage($image, $extension)
     {
         $randomString = Str::random(40);
-        Storage::put("public/images/$randomString.jpg", $image, 'public');
+        Storage::put("public/images/$randomString.$extension", $image, 'public');
         return "images/$randomString.jpg";
     }
 
@@ -108,5 +108,10 @@ class Controller extends BaseController
         } else {
             return $base64_string;
         }
+    }
+
+    protected function getExtensionBase64($base64_encoded_string)
+    {
+        return explode('/', mime_content_type($base64_encoded_string))[1];
     }
 }

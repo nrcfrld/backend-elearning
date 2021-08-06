@@ -29,7 +29,7 @@ class CategoryController extends Controller
 
         if($request->has('image') && $request->image){
             if($request->image){
-                $data['image'] = $this->storeImage($this->decodeBase64toImage($request->image));
+                $data['image'] = $this->storeImage($this->decodeBase64toImage($request->image), $this->getExtensionBase64($request->image));
             }
         }
 
