@@ -22,7 +22,7 @@ class Course extends BaseModel
     /**
      * @var null|array What relations should one model of this entity be returned with, from a relevant controller
      */
-    public static $itemWith = ['category', 'mentors'];
+    public static $itemWith = ['category', 'mentors', 'mainMentor'];
 
     /**
      * @var null|array What relations should a collection of models of this entity be returned with, from a relevant controller
@@ -45,7 +45,7 @@ class Course extends BaseModel
      */
     protected $hidden = [];
 
-    protected $appends = ['total_enrolled'];
+    protected $appends = ['total_enrolled', 'total_lessons'];
 
     public function getThumbnailAttribute($thumbnail)
     {
@@ -61,6 +61,18 @@ class Course extends BaseModel
     public function getTotalEnrolledAttribute()
     {
         return $this->users()->count();
+    }
+
+    public function getTotalLessonsAttribute()
+    {
+        $total = 0;
+        $chapters = $this->chapters()->withCount('lessons')->get();
+
+        foreach($chapters as $chapter){
+            $total += $chapter->lessons_count;
+        }
+
+        return $total;
     }
 
     public function getTagsAttribute($tags)
@@ -106,5 +118,13 @@ class Course extends BaseModel
 
     public function users(){
         return $this->hasMany(UserCourse::class);
+    }
+
+    public function chapters(){
+        return $this->hasMany(Chapter::class);
+    }
+
+    public function mainMentor(){
+        return $this->belongsTo(User::class, 'created_by', 'id');
     }
 }
