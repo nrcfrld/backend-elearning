@@ -96,7 +96,7 @@ class Controller extends BaseController
     {
         $randomString = Str::random(40);
         Storage::put("public/images/$randomString.$extension", $image, 'public');
-        return "images/$randomString.jpg";
+        return "images/$randomString.$extension";
     }
 
 
