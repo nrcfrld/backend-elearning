@@ -100,7 +100,7 @@ $api->version('v1', ['middleware' => ['api']], function (Router $api) {
         $api->get('/users/{uuid}', 'App\Http\Controllers\UserController@get');
 
         // * Orders
-        $api->post('/orders/enroll', 'App\Http\Controllers\OrderController@create');
+        $api->post('/orders/enroll/{course}', 'App\Http\Controllers\OrderController@create');
 
         $api->group(['middleware' => 'check_role:admin'], function(Router $api){
             /*

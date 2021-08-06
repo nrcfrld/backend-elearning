@@ -30,13 +30,11 @@ class OrderController extends Controller
         }
     }
 
-    public function create(Request $request)
+    public function create(Course $course, Request $request)
     {
         $request->validate([
             'course_id' => 'required'
         ]);
-
-        $course = Course::findOrFail($request->course_id)->with('category')->first();
 
         $user = Auth::user();
 
