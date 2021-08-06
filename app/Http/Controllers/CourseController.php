@@ -35,7 +35,7 @@ class CourseController extends Controller
 
         if($request->has('thumbnail') && $request->thumbnail){
             if($request->thumbnail){
-                $data['thumbnail'] = $this->storeImage($this->decodeBase64toImage($request->thumbnail));
+                $data['thumbnail'] = $this->storeImage($this->decodeBase64toImage($request->thumbnail), $this->getExtensionBase64($request->thumbnail));
             }
         }
 
