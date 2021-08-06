@@ -38,12 +38,14 @@ class Course extends BaseModel
     /**
      * @var array The attributes that are mass assignable.
      */
-    protected $fillable = ['name', 'category_id', 'type', 'level', 'descriptions', 'price', 'max_participant', 'trailer_url', 'thumbnail', 'tags', 'minute'];
+    protected $fillable = ['name', 'category_id', 'type', 'level', 'descriptions', 'price', 'max_participant', 'trailer_url', 'thumbnail', 'tags', 'minute', 'is_featured'];
 
     /**
      * @var array The attributes that should be hidden for arrays and API output
      */
     protected $hidden = [];
+
+    protected $appends = ['total_enrolled'];
 
     public function getThumbnailAttribute($thumbnail)
     {
@@ -54,6 +56,11 @@ class Course extends BaseModel
         }
 
         return asset('/img/example-image.jpg');
+    }
+
+    public function getTotalEnrolledAttribute()
+    {
+        return $this->users()->count();
     }
 
     public function getTagsAttribute($tags)
@@ -95,5 +102,9 @@ class Course extends BaseModel
 
     public function mentors(){
         return $this->belongsToMany(User::class, 'course_mentor', 'course_id', 'user_id');
+    }
+
+    public function users(){
+        return $this->hasMany(UserCourse::class);
     }
 }
