@@ -102,6 +102,17 @@ $api->version('v1', ['middleware' => ['api']], function (Router $api) {
         // * Orders
         $api->post('/orders/enroll/{course}', 'App\Http\Controllers\OrderController@create');
 
+        // * User Course
+        $api->group(['prefix' => 'user-courses'], function (Router $api) {
+            $api->get('/', 'App\Http\Controllers\UserCourseController@getAll');
+            $api->get('/{uuid}', 'App\Http\Controllers\UserCourseController@get');
+            $api->post('/', 'App\Http\Controllers\UserCourseController@post');
+            $api->patch('/{uuid}', 'App\Http\Controllers\UserCourseController@patch');
+            $api->delete('/{uuid}', 'App\Http\Controllers\UserCourseController@delete');
+        });
+
+
+        // Admin Only
         $api->group(['middleware' => 'check_role:admin'], function(Router $api){
             /*
             * Users
