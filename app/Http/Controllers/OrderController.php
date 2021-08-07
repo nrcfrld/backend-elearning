@@ -41,6 +41,9 @@ class OrderController extends Controller
         ]);
 
         if($course->price < 1){
+            $order->status = 'success';
+            $order->save();
+
             return UserCourse::create([
                 'user_id' => $user->id,
                 'course_id' => $course->id,
