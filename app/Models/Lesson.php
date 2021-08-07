@@ -41,6 +41,17 @@ class Lesson extends BaseModel
      */
     protected $hidden = [];
 
+    protected $appends = ['youtube_id'];
+
+
+    public function getYoutubeIdAttribute()
+    {
+        if($this->video_url){
+            $exploded = explode("/", $this->video_url);
+            return end($exploded);
+        }
+    }
+
     /**
      * Return the validation rules for this model
      *
