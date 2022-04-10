@@ -19,7 +19,7 @@ class CreateCoursesTable extends Migration
             $table->uuid('id')->primary();
             $table->string('name');
             $table->string('slug');
-            $table->text('descriptions')->nullable();
+            $table->mediumText('descriptions')->nullable();
             $table->string('thumbnail')->nullable();
             $table->enum('level', CourseLevel::getValues());
             $table->enum('type', ['VIDEO', 'ONSITE']);
@@ -29,7 +29,6 @@ class CreateCoursesTable extends Migration
             $table->string('tags')->nullable();
             $table->integer('max_participant')->nullable();
             $table->string('trailer_url')->nullable();
-            $table->integer('minutes')->default(0);
             $table->boolean('is_featured')->default(false);
 
 

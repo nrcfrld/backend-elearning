@@ -29,7 +29,7 @@ $api = app('Dingo\Api\Routing\Router');
 
 $api->version('v1', ['middleware' => ['api']], function (Router $api) {
 
-    $api->get('/', 'App\Http\Controllers\Web\HomeController@index');
+    $api->get('/', 'App\Http\Controllers\CourseController@certificate');
 
     $api->post('/webhook', 'App\Http\Controllers\WebhookController@midtransHandler');
 
@@ -73,7 +73,7 @@ $api->version('v1', ['middleware' => ['api']], function (Router $api) {
     /*
     * Lessons
     */
-    $api->group(['prefix' => 'lessons'], function (Router $api){
+    $api->group(['prefix' => 'lessons'], function (Router $api) {
         $api->get('/', 'App\Http\Controllers\LessonController@getAll');
         $api->get('/{uuid}', 'App\Http\Controllers\LessonController@get');
     });
@@ -113,7 +113,7 @@ $api->version('v1', ['middleware' => ['api']], function (Router $api) {
 
 
         // Admin Only
-        $api->group(['middleware' => 'check_role:admin'], function(Router $api){
+        $api->group(['middleware' => 'check_role:admin'], function (Router $api) {
             /*
             * Users
             */
@@ -192,5 +192,4 @@ $api->version('v1', ['middleware' => ['api']], function (Router $api) {
             });
         });
     });
-
 });

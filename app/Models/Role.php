@@ -27,4 +27,9 @@ class Role extends BaseModel
     protected $fillable = [
         'name', 'description',
     ];
+
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
 }

@@ -2,13 +2,12 @@
 
 namespace App\Models;
 
-use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Lesson extends BaseModel
+class UserLesson extends BaseModel
 {
-    use HasFactory, Sluggable;
+    use HasFactory;
 
     /**
      * @var string UUID key of the resource
@@ -34,23 +33,12 @@ class Lesson extends BaseModel
     /**
      * @var array The attributes that are mass assignable.
      */
-    protected $fillable = ['name', 'descriptions', 'video_url', 'free_access', 'chapter_id', 'minutes'];
+    protected $fillable = [];
 
     /**
      * @var array The attributes that should be hidden for arrays and API output
      */
     protected $hidden = [];
-
-    protected $appends = ['youtube_id'];
-
-
-    public function getYoutubeIdAttribute()
-    {
-        if ($this->video_url) {
-            $exploded = explode("/", $this->video_url);
-            return end($exploded);
-        }
-    }
 
     /**
      * Return the validation rules for this model
@@ -62,17 +50,13 @@ class Lesson extends BaseModel
         return [];
     }
 
-    public function sluggable(): array
+    public function user()
     {
-        return [
-            'slug' => [
-                'source' => 'name'
-            ]
-        ];
+        return $this->belongsTo(User::class);
     }
 
-    public function chapter()
+    public function lesson()
     {
-        return $this->belongsTo(Chapter::class);
+        return $this->belongsTo(Lesson::class);
     }
 }

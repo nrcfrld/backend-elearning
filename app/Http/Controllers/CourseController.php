@@ -5,7 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use Illuminate\Http\Request;
 use App\Http\Controllers\CourseMentorController;
+use App\Models\User;
+use App\Services\CertificateService;
 use App\Services\RestfulService;
+use Carbon\Carbon;
+use setasign\Fpdi\Fpdi;
+use Storage;
 
 class CourseController extends Controller
 {
@@ -33,8 +38,8 @@ class CourseController extends Controller
         $model = new static::$model;
         $data = $request->input();
 
-        if($request->has('thumbnail') && $request->thumbnail){
-            if($request->thumbnail){
+        if ($request->has('thumbnail') && $request->thumbnail) {
+            if ($request->thumbnail) {
                 $data['thumbnail'] = $this->storeImage($this->decodeBase64toImage($request->thumbnail), $this->getExtensionBase64($request->thumbnail));
             }
         }
@@ -43,9 +48,9 @@ class CourseController extends Controller
 
         $resource = $this->restfulService->persistResource(new $model($data));
 
-        if($request->has('mentors') && $request->mentors){
+        if ($request->has('mentors') && $request->mentors) {
             $mentors = json_decode($request->mentors);
-            foreach($mentors as $mentor){
+            foreach ($mentors as $mentor) {
                 (new CourseMentorController(new RestfulService))->post(new Request([
                     'user_id' => $mentor->id,
                     'course_id' => $resource->id
@@ -63,5 +68,20 @@ class CourseController extends Controller
         }
 
         return $response;
+    }
+
+    public function certificate(Request $request)
+    {
+        $course = Course::first();
+        $user = User::first();
+        $filename = (new CertificateService())->generate($course, $user, Carbon::now()->format('Y-m-d'));
+
+        return Storage::download($filename);
+
+        // return $this->response->array([[
+        //     'data' => [
+        //         'certificate_url' => asset(Storage::url($filename))
+        //     ]
+        // ]]);
     }
 }

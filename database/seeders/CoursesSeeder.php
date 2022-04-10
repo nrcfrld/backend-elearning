@@ -9,16 +9,17 @@ use Illuminate\Database\Seeder;
 
 class CoursesSeeder extends BaseSeeder
 {
-   /**
+    /**
      * Run fake seeds - for non production environments
      *
      * @return mixed
      */
-    public function runFake() {
+    public function runFake()
+    {
         Course::firstOrCreate([
-            'name' => 'Belajar HTML Dasar Untuk Pemula',
-            'slug' => 'belajar-html-dasar-untuk-pemula',
-            'descriptions' => 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat
+            'name' => 'Vue.js Design Pattern',
+            'slug' => 'vue-js-design-patter',
+            'descriptions' => 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut `wisi enim ad minim laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat
 
 
 
@@ -49,7 +50,6 @@ class CoursesSeeder extends BaseSeeder
             'tags' => 'html',
             'trailer_url' => 'https://youtube.com/embed/6vG4oO39ivY',
             'minutes' => '90'
-
         ]);
     }
 
@@ -58,8 +58,8 @@ class CoursesSeeder extends BaseSeeder
      *
      * @return mixed
      */
-    public function runProduction() {
-
+    public function runProduction()
+    {
     }
 
     /**
@@ -67,7 +67,7 @@ class CoursesSeeder extends BaseSeeder
      *
      * @return mixed
      */
-    public function runAlways() {
-
+    public function runAlways()
+    {
     }
 }

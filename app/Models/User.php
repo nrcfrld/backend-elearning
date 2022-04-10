@@ -70,8 +70,8 @@ class User extends BaseModel implements
 
     public function getAvatarAttribute($avatar)
     {
-        if($avatar){
-            if(Storage::disk('public')->exists($avatar)){
+        if ($avatar) {
+            if (Storage::disk('public')->exists($avatar)) {
                 return Storage::disk('public')->url($avatar);
             }
         }
@@ -190,5 +190,20 @@ class User extends BaseModel implements
     public function getAuthIdentifierName()
     {
         return $this->getKeyName();
+    }
+
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class, 'user_courses');
+    }
+
+    public function lessons()
+    {
+        return $this->belongsToMany(Lesson::class, 'user_lessons');
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(orders::class, 'user_id');
     }
 }
