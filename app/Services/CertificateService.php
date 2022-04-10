@@ -20,8 +20,8 @@ class CertificateService
 
     public function __construct()
     {
-        define('FPDF_FONTPATH', app_path('\Fonts'));
-        $this->sourceFile = public_path('\master\cert.pdf');
+        define('FPDF_FONTPATH', app_path('/Fonts'));
+        $this->sourceFile = public_path('/master/cert.pdf');
         $this->fpdi = new Fpdi();
         $this->fpdi->AddFont('BebasNeue', '', 'BebasNeue-Regular.php');
         $this->fpdi->AddFont('Raleway', '', 'Raleway-Regular.php');
