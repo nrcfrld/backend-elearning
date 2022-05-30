@@ -34,12 +34,15 @@ class Chapter extends BaseModel
     /**
      * @var array The attributes that are mass assignable.
      */
-    protected $fillable = ['name','slug','descriptions','course_id'];
+    protected $fillable = ['name', 'slug', 'descriptions', 'course_id'];
 
     /**
      * @var array The attributes that should be hidden for arrays and API output
      */
     protected $hidden = [];
+
+
+    protected $appends = ['is_completed'];
 
     /**
      * Return the validation rules for this model
@@ -60,7 +63,8 @@ class Chapter extends BaseModel
         return $this->belongsTo(Course::class);
     }
 
-    public function lessons(){
+    public function lessons()
+    {
         return $this->hasMany(Lesson::class);
     }
 
@@ -71,5 +75,16 @@ class Chapter extends BaseModel
                 'source' => 'name'
             ]
         ];
+    }
+
+    public function getIsCompletedAttribute()
+    {
+        foreach ($this->lessons as $lesson) {
+            if (!$lesson->is_completed) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

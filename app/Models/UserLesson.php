@@ -17,7 +17,7 @@ class UserLesson extends BaseModel
     /**
      * @var null|array What relations should one model of this entity be returned with, from a relevant controller
      */
-    public static $itemWith = [];
+    public static $itemWith = ["lesson"];
 
     /**
      * @var null|array What relations should a collection of models of this entity be returned with, from a relevant controller
@@ -33,7 +33,7 @@ class UserLesson extends BaseModel
     /**
      * @var array The attributes that are mass assignable.
      */
-    protected $fillable = [];
+    protected $fillable = ['user_id', 'lesson_id', 'status'];
 
     /**
      * @var array The attributes that should be hidden for arrays and API output

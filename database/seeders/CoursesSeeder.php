@@ -49,7 +49,6 @@ class CoursesSeeder extends BaseSeeder
             'type' => 'VIDEO',
             'tags' => 'html',
             'trailer_url' => 'https://youtube.com/embed/6vG4oO39ivY',
-            'minutes' => '90'
         ]);
     }
 

@@ -70,18 +70,11 @@ class CourseController extends Controller
         return $response;
     }
 
-    public function certificate(Request $request)
+    public function certificate(Course $course, Request $request)
     {
-        $course = Course::first();
-        $user = User::first();
+        $user = auth()->user();
         $filename = (new CertificateService())->generate($course, $user, Carbon::now()->format('Y-m-d'));
 
         return Storage::download($filename);
-
-        // return $this->response->array([[
-        //     'data' => [
-        //         'certificate_url' => asset(Storage::url($filename))
-        //     ]
-        // ]]);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\CourseLevel;
 use BenSampo\Enum\Rules\EnumValue;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Cviebrock\EloquentSluggable\Sluggable;
@@ -38,19 +39,19 @@ class Course extends BaseModel
     /**
      * @var array The attributes that are mass assignable.
      */
-    protected $fillable = ['name', 'category_id', 'type', 'level', 'descriptions', 'price', 'max_participant', 'trailer_url', 'thumbnail', 'tags', 'minute', 'is_featured'];
+    protected $fillable = ['name', 'category_id', 'type', 'level', 'descriptions', 'price', 'max_participant', 'trailer_url', 'thumbnail', 'tags', 'is_featured'];
 
     /**
      * @var array The attributes that should be hidden for arrays and API output
      */
     protected $hidden = [];
 
-    protected $appends = ['total_enrolled', 'total_lessons'];
+    protected $appends = ['total_enrolled', 'total_lessons', 'minutes', 'is_completed'];
 
     public function getThumbnailAttribute($thumbnail)
     {
-        if($thumbnail){
-            if(Storage::disk('public')->exists($thumbnail)){
+        if ($thumbnail) {
+            if (Storage::disk('public')->exists($thumbnail)) {
                 return Storage::disk('public')->url($thumbnail);
             }
         }
@@ -68,16 +69,25 @@ class Course extends BaseModel
         $total = 0;
         $chapters = $this->chapters()->withCount('lessons')->get();
 
-        foreach($chapters as $chapter){
+        foreach ($chapters as $chapter) {
             $total += $chapter->lessons_count;
         }
 
         return $total;
     }
 
+    public function getMinutesAttribute()
+    {
+        $total = 0;
+        foreach ($this->chapters as $chapter) {
+            $total += $chapter->lessons->sum('minutes');
+        }
+        return $total;
+    }
+
     public function getTagsAttribute($tags)
     {
-        if($tags){
+        if ($tags) {
             return explode(',', $tags);
         }
         return [];
@@ -108,23 +118,39 @@ class Course extends BaseModel
         ];
     }
 
-    public function category(){
+    public function category()
+    {
         return $this->belongsTo(Category::class);
     }
 
-    public function mentors(){
+    public function mentors()
+    {
         return $this->belongsToMany(User::class, 'course_mentor', 'course_id', 'user_id');
     }
 
-    public function users(){
+    public function users()
+    {
         return $this->hasMany(UserCourse::class);
     }
 
-    public function chapters(){
+    public function chapters()
+    {
         return $this->hasMany(Chapter::class);
     }
 
-    public function mainMentor(){
+    public function mainMentor()
+    {
         return $this->belongsTo(User::class, 'created_by', 'id');
+    }
+
+    public function getIsCompletedAttribute()
+    {
+        foreach ($this->chapters as $chapter) {
+            if (!$chapter->is_completed) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

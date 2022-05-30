@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Lesson;
 use App\Models\UserLesson;
+use App\Transformers\BaseTransformer;
 use Illuminate\Http\Request;
 
 class UserLessonController extends Controller
 {
+    public static $model = UserLesson::class;
     /**
      * Display a listing of the resource.
      *
@@ -33,9 +36,8 @@ class UserLessonController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Lesson $lesson, Request $request)
     {
-        //
     }
 
     /**
@@ -67,9 +69,14 @@ class UserLessonController extends Controller
      * @param  \App\Models\UserLesson  $userLesson
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, UserLesson $userLesson)
+    public function update(Request $request, Lesson $lesson)
     {
-        //
+        $userLesson = UserLesson::updateOrCreate(
+            ['user_id' => auth()->user()->id, 'lesson_id' => $lesson->id],
+            ['status' => $request->status]
+        );
+
+        return $this->response->item($lesson, new BaseTransformer);
     }
 
     /**

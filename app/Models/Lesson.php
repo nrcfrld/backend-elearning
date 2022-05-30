@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\UserLessonStatus;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -41,7 +42,7 @@ class Lesson extends BaseModel
      */
     protected $hidden = [];
 
-    protected $appends = ['youtube_id'];
+    protected $appends = ['youtube_id', 'is_completed'];
 
 
     public function getYoutubeIdAttribute()
@@ -74,5 +75,23 @@ class Lesson extends BaseModel
     public function chapter()
     {
         return $this->belongsTo(Chapter::class);
+    }
+
+    public function getIsCompletedAttribute()
+    {
+        if (auth()->user()) {
+            $userLesson = UserLesson::where([
+                ['lesson_id', $this->id],
+                ['created_by', auth()->user()->id]
+            ])->first();
+
+            if ($userLesson && $userLesson->status === UserLessonStatus::DONE) {
+                return true;
+            }
+
+            return false;
+        } else {
+            return false;
+        }
     }
 }
